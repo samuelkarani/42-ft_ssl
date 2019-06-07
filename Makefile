@@ -13,9 +13,10 @@ all: $(NAME)
 $(NAME):
 	@make -C libft
 	@make -C libft/ft_printf
+	@make -C libft/get_next_line
 	@$(CC) $(CFLAGS) $(SRC) -Llibft -lft \
 		-Llibft/ft_printf -lftprintf \
-		 -Llibft/get_next_line -lftget_next_line -o $@
+		-Llibft/get_next_line -lftget_next_line -o $@
 
 clean:
 	@make clean -C libft

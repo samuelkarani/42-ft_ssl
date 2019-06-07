@@ -32,7 +32,7 @@ char	*append(char *message, unsigned long long *mlen)
 	*mlen = *mlen + 1 + i + 64;
 	s = join_free(s, slen);
 	slen = s;
-	s = join_and_free(message, s);
+	s = ft_strjoin(message, s);
 	free(slen);
 	return (s);
 }
@@ -61,8 +61,8 @@ void	calc(int *vars, int i, int *fg)
 		f = vars[2] ^ (vars[1] | ~vars[3]);
 		g = (7 * i) % 16;
 	}
-	vars[0] = f;
-	vars[1] = g;
+	fg[0] = f;
+	fg[1] = g;
 }
 
 void	assign(int *dst, int *src)

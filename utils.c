@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:43:45 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/06 22:14:42 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/07 00:07:41 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ int	len_llu(unsigned long long n)
 
 char	*ft_itoa_llu(unsigned long long n)
 {
-	char				*ret;
-	int					len;
+	char	*ret;
+	int		len;
 
 	len = len_llu(n);
 	ret = ft_memalloc(len + 1);
