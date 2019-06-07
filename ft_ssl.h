@@ -6,14 +6,16 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:03:58 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/06 22:14:48 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/06 23:52:53 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft_expanded/libft.h"
 
 #ifndef FT_SSL_H
-#define FT_SSL_H
+# define FT_SSL_H
+
+# include "libft/libft.h"
+# include "libft/ft_printf/ft_printf.h"
 
 uint32_t g_s[] = {
     7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,

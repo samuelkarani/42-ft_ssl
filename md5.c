@@ -16,7 +16,7 @@ char	*strpad_free(char *slen, int len)
 char	*append(char *message, unsigned long long *mlen)
 {
 	char	*s, *slen;
-	int		x, i, len;
+	int		x, i;
 
 	x = *mlen % 512;
 	if (x > 448)
@@ -30,12 +30,17 @@ char	*append(char *message, unsigned long long *mlen)
 	slen = ft_itoa_llu(*mlen);
 	slen = strpad_free(slen, ft_strlen(slen));
 	*mlen = *mlen + 1 + i + 64;
-	return join_free(s, slen);
+	s = join_free(s, slen);
+	slen = s;
+	s = join_and_free(message, s);
+	free(slen);
+	return (s);
 }
 
 void	calc(int *vars, int i, int *fg)
 {
 	int f, g;
+
 	if (i >= 0 && i < 16)
 	{
 		f = (vars[1] & vars[2]) | (~vars[1] & vars[3]);
@@ -67,13 +72,7 @@ void	assign(int *dst, int *src)
 
 int		chunk(char *message, int g)
 {
-	char	*res;
-	int		n;
-
-	res = ft_strnew(sizeof(int));
-	ft_memcpy(message + g * sizeof(int), res, sizeof(int));
-	n = ft_atoi(res);
-	return n;
+	return ((int)message + g * sizeof(int));
 }
 
 int 	left_rotate(int n, int s)
@@ -81,20 +80,12 @@ int 	left_rotate(int n, int s)
 	return ((n << s) | (n >> (32 - s)));
 }
 
-char	*join(int *vars)
+void	join_print(int *vars)
 {
-	char	*a, *b, *c, *d, *res;
-
-	a = ft_itoa(vars[0]);
-	b = ft_itoa(vars[1]);
-	c = ft_itoa(vars[2]);
-	d = ft_itoa(vars[3]);
-	res = join_free(a, b);
-	res = join_free(res, c);
-	return (join_free(res, d));
+	ft_printf("%x%x%x%x", vars[0], vars[1], vars[2], vars[3], vars[4]);
 }
 
-void	copy(int *vars)
+void	copy_round(int *vars)
 {
 	int a, b, c, d;
 
@@ -110,13 +101,16 @@ void	copy(int *vars)
 
 void	md5(char *message, unsigned long long mlen)
 {
-	int cnts[4], vars[4], fg[2], i, j;
+	int cnts[4], vars[4], fg[2], i;
+	unsigned long long	j;
 
 	message = append(message, &mlen);
 	assign(cnts, (int[]){0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476});
+	j = 0;
 	while (j < mlen)
 	{
 		assign(vars, cnts);
+		i = 0;
 		while (i < 64)
 		{
 			calc(vars, i, fg);
@@ -124,13 +118,14 @@ void	md5(char *message, unsigned long long mlen)
 				+ left_rotate(
 					vars[0] + fg[0] + g_k[i] + chunk(message + j, fg[1]),
 					g_s[i]);
-			copy(vars);
+			copy_round(vars);
 			i++;
 		}
-		ft_memcpy(cnts, vars, 4);
+		ft_memcpy_ints(cnts, vars, 4);
 		j += 512;
 	}
-	join(vars);
+	join_print(vars);
+	free(message);
 }
 
 int		main(int ac, char **av)
