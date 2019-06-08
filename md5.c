@@ -1,14 +1,14 @@
 #include "ft_ssl.h"
 
-char	*pad_free(char *s, int n)
+uint8_t	*pad_free(uint8_t *s, int n)
 {
 	int		i;
-	char	*res;
+	uint8_t	*res;
 
 	res = s;
 	if (n < 8)
 	{
-		res = malloc(8 * sizeof(char));
+		res = malloc(8);
 		ft_memset(res, 0, 8);
 		i = 7;
 		while (--n >= 0)
@@ -18,10 +18,10 @@ char	*pad_free(char *s, int n)
 	return (res);
 }
 
-char	*append(char *message, unsigned long long *mlen)
+uint8_t	*append(uint8_t *message, uint64_t *mlen)
 {
-	char	*res, *slen;
-	int		i, x, n;
+	uint8_t		*res, *slen;
+	uint32_t	i, x, n;
 
 	x = *mlen % 64;
 	if (x > 56)
@@ -32,19 +32,19 @@ char	*append(char *message, unsigned long long *mlen)
 		i = 64;
 	res = ft_memalloc(*mlen + i + 8);
 	ft_memcpy(res, message, *mlen);
-	res[*mlen] = (unsigned char)128;
+	res[*mlen] = (u_int8_t)128;
 	ft_memset(res + *mlen + 1, 0, i - 1);
-	slen = ft_itoa_base(*mlen, 2);
-	n = ft_strlen(slen);
-	slen = pad_free(slen, n);
+	slen = ft_itoa_base_llu(*mlen, 2);
+	n = ft_strlen((char *)slen);
+	slen = pad_free(slen, (int)n);
 	ft_memcpy(res + *mlen + i, slen, 8);
 	*mlen = *mlen + i + 8;
 	return res;
 }
 
-void	compress(unsigned int *vars, int i, unsigned int *fg)
+void	compress(uint32_t *vars, int i, uint32_t *fg)
 {
-	int f, g;
+	uint32_t f, g;
 
 	if (i >= 0 && i < 16)
 	{
@@ -70,22 +70,25 @@ void	compress(unsigned int *vars, int i, unsigned int *fg)
 	fg[1] = g;
 }
 
-void	assign(unsigned int *dst, unsigned int *src)
+void	assign(uint32_t *dst, uint32_t *src)
 {
 	ft_memcpy_ints(dst, src, 4);
 }
 
-unsigned int chunk(char *message, int g)
+uint32_t chunk(uint8_t *message, int g)
 {
-	return ((unsigned int)(message + g * sizeof(unsigned int)));
+	uint32_t n;
+
+	n = (uint32_t)(message + g * 4);
+	return (n);
 }
 
-unsigned int left_rotate(unsigned int n, unsigned int s)
+uint32_t left_rotate(uint32_t n, uint32_t s)
 {
 	return ((n << s) | (n >> (32 - s)));
 }
 
-void	update(unsigned int *dst, unsigned int *src)
+void	update(uint32_t *dst, uint32_t *src)
 {
 	int i;
 
@@ -97,9 +100,9 @@ void	update(unsigned int *dst, unsigned int *src)
 	}
 }
 
-void	copy_round(unsigned int *vars)
+void	copy_round(uint32_t *vars)
 {
-	int a, b, c, d;
+	uint32_t a, b, c, d;
 
 	a = vars[0];
 	b = vars[1];
@@ -111,38 +114,40 @@ void	copy_round(unsigned int *vars)
 	vars[3] = c;
 }
 
-void	md5(char *message, unsigned long long mlen)
+void	md5(uint8_t *message, uint64_t mlen)
 {
-	unsigned int cnts[4], vars[4], fg[2], i;
-	unsigned long long	j;
+	uint32_t cnts[4], vars[4], fg[2], i;
+	uint64_t	j;
 
 	message = append(message, &mlen);
-	assign(cnts, (unsigned int[]){0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476});
+	print_binary_char(message, mlen);
+	assign(cnts, (uint32_t[]){0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476});
 	j = 0;
 	while (j < mlen)
 	{
 		assign(vars, cnts);
 		i = 0;
-		while (i < 3)
+		while (i < 64)
 		{
 			compress(vars, i, fg);
 			vars[0] = vars[1]
 				+ left_rotate(
 					vars[0] + fg[0] + g_k[i] + chunk(message + j, fg[1]),
 					g_s[i]);
-			// print_hex(vars, 4); ft_putstr("\n");
 			copy_round(vars);
+			print_hex_ints(vars, 4);
+			print_binary_ints(vars, 4);
 			i++;
 		}
 		update(cnts, vars);
 		j += 64;
 	}
-	join_print((unsigned char *)vars);
+	join_print((u_int8_t *)vars);
 	free(message);
 }
 
 int		main(int ac, char **av)
 {
 	if (ac == 2)
-		md5(av[1], ft_strlen_llu(av[1]));
+		md5((uint8_t *)av[1], ft_strlen_llu((uint8_t *)av[1]));
 }

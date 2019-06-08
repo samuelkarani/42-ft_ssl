@@ -6,15 +6,15 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:43:45 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/07 22:40:08 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/08 14:11:45 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-unsigned long long	ft_strlen_llu(char *s)
+uint64_t	ft_strlen_llu(uint8_t *s)
 {
-	unsigned long long count;
+	uint64_t count;
 
 	count = 0;
 	while (*s++)
@@ -22,38 +22,47 @@ unsigned long long	ft_strlen_llu(char *s)
 	return count;
 }
 
-int		len_llu(unsigned long long n)
+uint32_t	len_llu(uint64_t n, uint64_t base)
 {
-	int i;
+	uint32_t i;
 
 	if (n == 0)
 		return (1);
 	i = 1;
-	while (n /= 10)
+	while (n /= base)
 		i++;
 	return (i);
 }
 
-char	*ft_itoa_llu(unsigned long long n)
+uint8_t	*ft_itoa_base_llu(uint64_t n, uint32_t base)
 {
-	char	*ret;
-	int		len;
+	uint8_t		*ret;
+	size_t		len;
+	uint64_t	mod;
 
-	len = len_llu(n);
+	if (base < 2 || base > 16)
+		return (NULL);
+	len = len_llu(n, base);
 	ret = ft_memalloc(len + 1);
 	if (n == 0)
 		ret[0] = '0';
 	while (n)
 	{
-		ret[--len] = ft_abs(n % 10) + '0';
-		n = n / 10;
+		mod = n % base;
+		ret[--len] = mod < 10 ? mod + '0' : mod - 10 + 'a';
+		n = n / base;
 	}
 	return (ret);
 }
 
-unsigned int *ft_memcpy_ints(unsigned int *dst, unsigned int *src, int n)
+uint8_t	*ft_itoa_llu(uint64_t n)
 {
-	int	i;
+	return (ft_itoa_base_llu(n, 10));
+}
+
+uint32_t *ft_memcpy_ints(uint32_t *dst, uint32_t *src, int n)
+{
+	uint32_t	i;
 
 	i = 0;
 	while (i++ < n)
@@ -61,9 +70,9 @@ unsigned int *ft_memcpy_ints(unsigned int *dst, unsigned int *src, int n)
 	return (dst);
 }
 
-void	print_bit(unsigned char o)
+void	print_bit(uint8_t o)
 {
-	int i;
+	uint32_t	i;
 
 	i = 0;
 	while (i < 8)
@@ -76,30 +85,44 @@ void	print_bit(unsigned char o)
 	}
 }
 
-void	print_binary(char *message, unsigned long long mlen)
+void	print_binary_char(uint8_t *message, uint64_t mlen)
 {
-	unsigned long long	i;
+	uint64_t	i;
 
 	i = 0;
 	while (i < mlen)
 	{
 		print_bit(message[i++]);
-		ft_putchar('\n');
+		ft_putchar(' ');
 	}
+	ft_putchar('\n');
 }
 
-void	print_hex(unsigned int *arr, int n)
+void	print_binary_ints(uint32_t *arr, uint32_t len)
 {
-	int i;
+	uint32_t	i;
+
+	i = 0;
+	while (i < len)
+	{
+		print_bit(arr[i++]);
+		ft_putchar(' ');
+	}
+	ft_putchar(' ');
+}
+
+void	print_hex_ints(uint32_t *arr, int n)
+{
+	uint32_t	i;
 
 	i = 0;
 	while (i < n)
-		ft_printf("%#x\n", arr[i++]);
+		ft_printf("%#08x\n", arr[i++]);
 }
 
-void	join_print(unsigned char *vars)
+void	join_print(uint8_t *vars)
 {
-	int i;
+	uint32_t	i;
 
 	i = 0;
 	while (i < 16)

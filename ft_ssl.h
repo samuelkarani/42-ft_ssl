@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:03:58 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/07 22:40:05 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/08 13:55:46 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,14 @@ static uint32_t g_k[] = {
     0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
 
-unsigned long long ft_strlen_llu(char *s);
-char			*ft_itoa_llu(unsigned long long n);
-unsigned int	*ft_memcpy_ints(unsigned int *dst, unsigned int *src, int n);
-void			print_binary(char *message, unsigned long long mlen);
-void			print_hex(unsigned int *arr, int n);
-void			join_print(unsigned char *vars);
+user_ulong_t	ft_strlen_llu(uint8_t *s);
+uint8_t			*ft_itoa_llu(unsigned long long n);
+uint8_t			*ft_itoa_base_llu(unsigned long long n, uint32_t base);
+uint32_t 		*ft_memcpy_ints(uint32_t *dst, uint32_t *src, int n);
+void			print_binary_char(unsigned char *message, unsigned long long mlen);
+void			print_binary_ints(uint32_t *arr, uint32_t len);
+void			print_hex_ints(uint32_t *arr, int n);
+void			print_binary_char(uint8_t *message, unsigned long long mlen);
+void			join_print(uint8_t *vars);
 
 #endif
