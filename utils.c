@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:43:45 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/08 14:11:45 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/08 14:23:38 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 uint64_t	ft_strlen_llu(uint8_t *s)
 {
-	uint64_t count;
+	uint64_t	count;
 
 	count = 0;
 	while (*s++)
@@ -22,7 +22,7 @@ uint64_t	ft_strlen_llu(uint8_t *s)
 	return count;
 }
 
-uint32_t	len_llu(uint64_t n, uint64_t base)
+size_t	len_llu(uint64_t n, size_t base)
 {
 	uint32_t i;
 
@@ -34,7 +34,7 @@ uint32_t	len_llu(uint64_t n, uint64_t base)
 	return (i);
 }
 
-uint8_t	*ft_itoa_base_llu(uint64_t n, uint32_t base)
+uint8_t	*ft_itoa_base_llu(uint64_t n, size_t base)
 {
 	uint8_t		*ret;
 	size_t		len;
@@ -60,9 +60,9 @@ uint8_t	*ft_itoa_llu(uint64_t n)
 	return (ft_itoa_base_llu(n, 10));
 }
 
-uint32_t *ft_memcpy_ints(uint32_t *dst, uint32_t *src, int n)
+uint32_t *ft_memcpy_ints(uint32_t *dst, uint32_t *src, size_t n)
 {
-	uint32_t	i;
+	size_t	i;
 
 	i = 0;
 	while (i++ < n)
@@ -85,9 +85,9 @@ void	print_bit(uint8_t o)
 	}
 }
 
-void	print_binary_char(uint8_t *message, uint64_t mlen)
+void	print_binary_char(uint8_t *message, size_t mlen)
 {
-	uint64_t	i;
+	size_t	i;
 
 	i = 0;
 	while (i < mlen)
@@ -98,7 +98,7 @@ void	print_binary_char(uint8_t *message, uint64_t mlen)
 	ft_putchar('\n');
 }
 
-void	print_binary_ints(uint32_t *arr, uint32_t len)
+void	print_binary_ints(uint32_t *arr, size_t len)
 {
 	uint32_t	i;
 
@@ -111,9 +111,9 @@ void	print_binary_ints(uint32_t *arr, uint32_t len)
 	ft_putchar(' ');
 }
 
-void	print_hex_ints(uint32_t *arr, int n)
+void	print_hex_ints(uint32_t *arr, size_t n)
 {
-	uint32_t	i;
+	size_t	i;
 
 	i = 0;
 	while (i < n)

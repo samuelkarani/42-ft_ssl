@@ -42,11 +42,11 @@ uint8_t	*append(uint8_t *message, uint64_t *mlen)
 	return res;
 }
 
-void	compress(uint32_t *vars, int i, uint32_t *fg)
+void	compress(uint32_t *vars, size_t i, uint32_t *fg)
 {
 	uint32_t f, g;
 
-	if (i >= 0 && i < 16)
+	if (i < 16)
 	{
 		f = (vars[1] & vars[2]) | (~vars[1] & vars[3]);
 		g = i;
@@ -75,7 +75,7 @@ void	assign(uint32_t *dst, uint32_t *src)
 	ft_memcpy_ints(dst, src, 4);
 }
 
-uint32_t chunk(uint8_t *message, int g)
+uint32_t chunk(uint8_t *message, size_t g)
 {
 	uint32_t n;
 
