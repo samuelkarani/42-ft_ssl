@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:03:58 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/08 14:23:35 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/08 16:19:26 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,12 @@ static uint32_t g_k[] = {
     0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
 
-uint64_t		ft_strlen_llu(uint8_t *s);
-uint8_t			*ft_itoa_llu(uint64_t n);
-uint8_t			*ft_itoa_base_llu(uint64_t n, size_t base);
-uint32_t 		*ft_memcpy_ints(uint32_t *dst, uint32_t *src, size_t n);
-void			print_binary_char(unsigned char *message, size_t mlen);
-void			print_binary_ints(uint32_t *arr, size_t len);
-void			print_hex_ints(uint32_t *arr, size_t n);
-void			print_binary_char(uint8_t *message, size_t mlen);
-void			join_print(uint8_t *vars);
+uint64_t	ft_strlen_llu(uint8_t *s);
+void		join_print(uint32_t *vars);
+
+void		print_binary_char(unsigned char *message, size_t mlen);
+void		print_binary_ints(uint32_t *arr, size_t len);
+void		print_hex_ints(uint32_t *arr, size_t n);
+void		print_binary_char(uint8_t *message, size_t mlen);
 
 #endif

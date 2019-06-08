@@ -1,28 +1,11 @@
 #include "ft_ssl.h"
 
-uint8_t	*pad_free(uint8_t *s, int n)
-{
-	int		i;
-	uint8_t	*res;
-
-	res = s;
-	if (n < 8)
-	{
-		res = malloc(8);
-		ft_memset(res, 0, 8);
-		i = 7;
-		while (--n >= 0)
-			res[i--] = s[n] - '0';
-		free(s);
-	}
-	return (res);
-}
-
 uint8_t	*append(uint8_t *message, uint64_t *mlen)
 {
-	uint8_t		*res, *slen;
+	uint8_t		*res;
 	uint32_t	i, x, n;
 
+	*mlen += 2;
 	x = *mlen % 64;
 	if (x > 56)
 		i = 64 - (x - 56);
@@ -31,13 +14,12 @@ uint8_t	*append(uint8_t *message, uint64_t *mlen)
 	else
 		i = 64;
 	res = ft_memalloc(*mlen + i + 8);
-	ft_memcpy(res, message, *mlen);
-	res[*mlen] = (u_int8_t)128;
-	ft_memset(res + *mlen + 1, 0, i - 1);
-	slen = ft_itoa_base_llu(*mlen, 2);
-	n = ft_strlen((char *)slen);
-	slen = pad_free(slen, (int)n);
-	ft_memcpy(res + *mlen + i, slen, 8);
+	ft_memcpy(res, message, *mlen - 2);
+	res[*mlen - 2] = (u_int8_t)10;
+	res[*mlen - 1] = (u_int8_t)128;
+	ft_memset(res + *mlen, 0, i);
+	n = (*mlen - 1) * 8;
+	ft_memcpy(res + *mlen + i, &n, 4); // ??
 	*mlen = *mlen + i + 8;
 	return res;
 }
@@ -70,17 +52,14 @@ void	compress(uint32_t *vars, size_t i, uint32_t *fg)
 	fg[1] = g;
 }
 
-void	assign(uint32_t *dst, uint32_t *src)
+void	assign(uint32_t *dst, uint32_t *src, size_t n)
 {
-	ft_memcpy_ints(dst, src, 4);
+	ft_memcpy(dst, src, n);
 }
 
-uint32_t chunk(uint8_t *message, size_t g)
+uint32_t chunk(uint32_t *message, size_t g)
 {
-	uint32_t n;
-
-	n = (uint32_t)(message + g * 4);
-	return (n);
+	return (message[g]);
 }
 
 uint32_t left_rotate(uint32_t n, uint32_t s)
@@ -120,29 +99,28 @@ void	md5(uint8_t *message, uint64_t mlen)
 	uint64_t	j;
 
 	message = append(message, &mlen);
-	print_binary_char(message, mlen);
-	assign(cnts, (uint32_t[]){0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476});
+	// print_binary_char(message, mlen); ft_putchar('\n');
+	assign(cnts, (uint32_t[]){0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476}, sizeof(cnts));
 	j = 0;
 	while (j < mlen)
 	{
-		assign(vars, cnts);
+		assign(vars, cnts, sizeof(vars));
 		i = 0;
 		while (i < 64)
 		{
 			compress(vars, i, fg);
 			vars[0] = vars[1]
 				+ left_rotate(
-					vars[0] + fg[0] + g_k[i] + chunk(message + j, fg[1]),
+					vars[0] + fg[0] + g_k[i] + chunk((uint32_t *)message + j, fg[1]),
 					g_s[i]);
 			copy_round(vars);
-			print_hex_ints(vars, 4);
-			print_binary_ints(vars, 4);
+			print_hex_ints(vars, 4); print_binary_ints(vars, 4); ft_printf("\n");
 			i++;
 		}
 		update(cnts, vars);
 		j += 64;
 	}
-	join_print((u_int8_t *)vars);
+	join_print(cnts);
 	free(message);
 }
 

@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:43:45 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/08 14:23:38 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/08 16:25:49 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,54 +20,6 @@ uint64_t	ft_strlen_llu(uint8_t *s)
 	while (*s++)
 		count++;
 	return count;
-}
-
-size_t	len_llu(uint64_t n, size_t base)
-{
-	uint32_t i;
-
-	if (n == 0)
-		return (1);
-	i = 1;
-	while (n /= base)
-		i++;
-	return (i);
-}
-
-uint8_t	*ft_itoa_base_llu(uint64_t n, size_t base)
-{
-	uint8_t		*ret;
-	size_t		len;
-	uint64_t	mod;
-
-	if (base < 2 || base > 16)
-		return (NULL);
-	len = len_llu(n, base);
-	ret = ft_memalloc(len + 1);
-	if (n == 0)
-		ret[0] = '0';
-	while (n)
-	{
-		mod = n % base;
-		ret[--len] = mod < 10 ? mod + '0' : mod - 10 + 'a';
-		n = n / base;
-	}
-	return (ret);
-}
-
-uint8_t	*ft_itoa_llu(uint64_t n)
-{
-	return (ft_itoa_base_llu(n, 10));
-}
-
-uint32_t *ft_memcpy_ints(uint32_t *dst, uint32_t *src, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i++ < n)
-		*dst++ = *src++;
-	return (dst);
 }
 
 void	print_bit(uint8_t o)
@@ -108,7 +60,7 @@ void	print_binary_ints(uint32_t *arr, size_t len)
 		print_bit(arr[i++]);
 		ft_putchar(' ');
 	}
-	ft_putchar(' ');
+	ft_putchar('\n');
 }
 
 void	print_hex_ints(uint32_t *arr, size_t n)
@@ -117,14 +69,30 @@ void	print_hex_ints(uint32_t *arr, size_t n)
 
 	i = 0;
 	while (i < n)
-		ft_printf("%#08x\n", arr[i++]);
+	{
+		ft_printf("%#08x", arr[i++]);
+		ft_putchar(' ');
+	}
+	ft_putchar('\n');
 }
 
-void	join_print(uint8_t *vars)
+uint32_t	swap_int32(const uint32_t value)
 {
-	uint32_t	i;
+	uint32_t result;
 
-	i = 0;
-	while (i < 16)
-		ft_printf("%02x", vars[i++]);
+	result = 0;
+	result |= (value & 0x000000FF) << 24;
+	result |= (value & 0x0000FF00) << 8;
+	result |= (value & 0x00FF0000) >> 8;
+	result |= (value & 0xFF000000) >> 24;
+	return (result);
+}
+
+void	join_print(uint32_t *vars)
+{
+	int			i;
+
+	i = -1;
+	while (++i < 4)
+		ft_printf("%8.8x", swap_int32(vars[i]));
 }
