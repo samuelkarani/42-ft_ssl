@@ -1,43 +1,48 @@
 #include "ft_ssl.h"
 
-char	*strpad_free(char *slen, int len)
+char	*pad_free(char *s, int n)
 {
-	char	*ret;
-	int		diff;
+	int		i;
+	char	*res;
 
-	ret = ft_strnew(64);
-	diff = 64 - len;
-	ft_memset(ret, '0', diff);
-	ft_memcpy(ret + diff, slen, len);
-	free(slen);
-	return (ret);
+	res = s;
+	if (n < 8)
+	{
+		res = malloc(8 * sizeof(char));
+		ft_memset(res, 0, 8);
+		i = 7;
+		while (--n >= 0)
+			res[i--] = s[n] - '0';
+		free(s);
+	}
+	return (res);
 }
 
 char	*append(char *message, unsigned long long *mlen)
 {
-	char	*s, *slen;
-	int		x, i;
+	char	*res, *slen;
+	int		i, x, n;
 
-	x = *mlen % 512;
-	if (x > 448)
-		i = 512 - x % 448;
-	else if (x < 448)
-		i = 448 - x;
+	x = *mlen % 64;
+	if (x > 56)
+		i = 64 - (x - 56);
+	else if (x < 56)
+		i = 56 - x;
 	else
-		i = 512;
-	s = ft_strnewpad(i + 1, '0');
-	s[0] = '1';
-	slen = ft_itoa_llu(*mlen);
-	slen = strpad_free(slen, ft_strlen(slen));
-	*mlen = *mlen + 1 + i + 64;
-	s = join_free(s, slen);
-	slen = s;
-	s = ft_strjoin(message, s);
-	free(slen);
-	return (s);
+		i = 64;
+	res = ft_memalloc(*mlen + i + 8);
+	ft_memcpy(res, message, *mlen);
+	res[*mlen] = (unsigned char)128;
+	ft_memset(res + *mlen + 1, 0, i - 1);
+	slen = ft_itoa_base(*mlen, 2);
+	n = ft_strlen(slen);
+	slen = pad_free(slen, n);
+	ft_memcpy(res + *mlen + i, slen, 8);
+	*mlen = *mlen + i + 8;
+	return res;
 }
 
-void	calc(int *vars, int i, int *fg)
+void	compress(unsigned int *vars, int i, unsigned int *fg)
 {
 	int f, g;
 
@@ -65,27 +70,34 @@ void	calc(int *vars, int i, int *fg)
 	fg[1] = g;
 }
 
-void	assign(int *dst, int *src)
+void	assign(unsigned int *dst, unsigned int *src)
 {
 	ft_memcpy_ints(dst, src, 4);
 }
 
-int		chunk(char *message, int g)
+unsigned int chunk(char *message, int g)
 {
-	return ((int)message + g * sizeof(int));
+	return ((unsigned int)(message + g * sizeof(unsigned int)));
 }
 
-int 	left_rotate(int n, int s)
+unsigned int left_rotate(unsigned int n, unsigned int s)
 {
 	return ((n << s) | (n >> (32 - s)));
 }
 
-void	join_print(int *vars)
+void	update(unsigned int *dst, unsigned int *src)
 {
-	ft_printf("%x%x%x%x", vars[0], vars[1], vars[2], vars[3], vars[4]);
+	int i;
+
+	i = 0;
+	while (i < 4)
+	{
+		dst[i] += src[i];
+		i++;
+	}
 }
 
-void	copy_round(int *vars)
+void	copy_round(unsigned int *vars)
 {
 	int a, b, c, d;
 
@@ -101,30 +113,31 @@ void	copy_round(int *vars)
 
 void	md5(char *message, unsigned long long mlen)
 {
-	int cnts[4], vars[4], fg[2], i;
+	unsigned int cnts[4], vars[4], fg[2], i;
 	unsigned long long	j;
 
 	message = append(message, &mlen);
-	assign(cnts, (int[]){0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476});
+	assign(cnts, (unsigned int[]){0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476});
 	j = 0;
 	while (j < mlen)
 	{
 		assign(vars, cnts);
 		i = 0;
-		while (i < 64)
+		while (i < 3)
 		{
-			calc(vars, i, fg);
+			compress(vars, i, fg);
 			vars[0] = vars[1]
 				+ left_rotate(
 					vars[0] + fg[0] + g_k[i] + chunk(message + j, fg[1]),
 					g_s[i]);
+			// print_hex(vars, 4); ft_putstr("\n");
 			copy_round(vars);
 			i++;
 		}
-		ft_memcpy_ints(cnts, vars, 4);
-		j += 512;
+		update(cnts, vars);
+		j += 64;
 	}
-	join_print(vars);
+	join_print((unsigned char *)vars);
 	free(message);
 }
 
