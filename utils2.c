@@ -6,23 +6,46 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 22:08:07 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 13:44:35 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 14:59:53 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-char	*read_file(char *fpath, char *algo)
+char	*read_lines(int fd)
 {
 	char	*res;
 	char	*line;
+	int		n;
+
+	res = NULL;
+	while ((n = get_next_line(fd, &line)) > 0)
+	{
+		if (n == 1)
+		{
+			if (res)
+			{
+				res = join_and_free(res, ft_strdup("\n"));
+				res = join_and_free(res, line);
+			}
+			else
+				res = join_and_free(line, ft_strdup("\n"));
+		}
+		else
+			res = join_and_free(res, line);
+	}
+	return (res);
+}
+
+char	*read_file(char *fpath, char *algo)
+{
+	char	*res;
 	int		fd;
 
 	res = NULL;
 	if ((fd = open(fpath, O_RDONLY)) > 0)
 	{
-		while (get_next_line(fd, &line))
-			res = join_and_free(res, line);
+		res = read_lines(fd);
 		close(fd);
 	}
 	else
@@ -32,13 +55,7 @@ char	*read_file(char *fpath, char *algo)
 
 char	*read_stdin(void)
 {
-	char	*res;
-	char	*line;
-
-	res = NULL;
-	while (get_next_line(STDIN_FILENO, &line))
-		res = join_and_free(res, line);
-	return (res);
+	return (read_lines(STDIN_FILENO));
 }
 
 int	valid_command(char *s)

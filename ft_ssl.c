@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 19:22:52 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 13:51:47 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 15:09:25 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	print_digest(uint32_t *digest, t_ssl arg, int *flags)
 	{
 		if (flags[0])
 		{
-			ft_putendl(arg.name);
+			ft_putstr(arg.name);
 			free(arg.name);
 		}
 		join_print((uint8_t *)digest, 1);
@@ -44,7 +44,7 @@ void	print_digest(uint32_t *digest, t_ssl arg, int *flags)
 		{
 			join_print((uint8_t *)digest, flags[1] ? 1 : 0);
 			if (!flags[1])
-				ft_printf(" %s\n", arg.name);
+				ft_printf(" \"%s\"\n", arg.name);
 		}
 		else
 		{

@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 22:41:32 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/03/18 16:49:35 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 14:44:18 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int		get_next_line(const int fd, char **line)
 	if (*line && n != -1)
 	{
 		line_ptrs[fd] = NULL;
-		return (1);
+		return (2);
 	}
 	return (n);
 }

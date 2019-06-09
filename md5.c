@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 19:16:05 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 13:21:44 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 14:58:32 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ uint8_t		*append_free_md5(uint8_t *message, uint64_t *mlen)
 	int			x;
 	uint64_t	n;
 
-	*mlen += 2;
+	*mlen += 1;
 	x = *mlen % 64;
 	if (x > 56)
 		i = 64 - (x - 56);
@@ -28,8 +28,7 @@ uint8_t		*append_free_md5(uint8_t *message, uint64_t *mlen)
 	else
 		i = 64;
 	res = malloc(*mlen + i + 8);
-	ft_memcpy(res, message, *mlen - 2);
-	res[*mlen - 2] = 10;
+	ft_memcpy(res, message, *mlen - 1);
 	res[*mlen - 1] = 128;
 	ft_memset(res + *mlen, 0, i);
 	n = (*mlen - 1) * 8;
@@ -92,6 +91,7 @@ uint32_t	*md5(uint8_t *message, uint64_t mlen)
 	uint64_t	j;
 
 	message = append_free_md5(message, &mlen);
+	// print_binary(message, mlen);
 	digest = malloc(sizeof(vars));
 	ft_memcpy(digest, (uint32_t[]){0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476}, sizeof(vars));
 	j = 0;
