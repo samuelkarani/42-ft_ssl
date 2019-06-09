@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 NAME = ft_ssl
 
-SRC = md5.c utils.c debug.c
+SRC = ft_ssl.c md5.c utils.c debug.c
 
 OBJ = $(SRC:.c=.o)
 
