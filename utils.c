@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:43:45 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 12:14:33 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 13:32:45 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,25 @@ uint32_t	right_rotate(uint32_t n, uint32_t s)
 
 void		update(uint32_t *dst, uint32_t *src, size_t n)
 {
-	int i;
+	size_t i;
 
 	i = 0;
-	while (i < 4)
+	while (i < n)
 	{
 		dst[i] += src[i];
 		i++;
 	}
 }
 
-void		join_print(uint8_t *vars)
+void		join_print(uint8_t *vars, int newline)
 {
 	int	i;
 
 	i = 0;
 	while (i < 16)
 		ft_printf("%02x", vars[i++]);
+	if (newline)
+		ft_putchar('\n');
 }
 
 uint64_t		swap_int64(const uint64_t val)
@@ -67,7 +69,7 @@ uint64_t		swap_int64(const uint64_t val)
 
 uint64_t	*swap(uint64_t *values, size_t n)
 {
-	int i;
+	size_t i;
 
 	i = 0;
 	while (i < n / sizeof(uint64_t))

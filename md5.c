@@ -6,13 +6,13 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 19:16:05 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 12:12:03 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 13:21:44 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-uint8_t		*append_free(uint8_t *message, uint64_t *mlen)
+uint8_t		*append_free_md5(uint8_t *message, uint64_t *mlen)
 {
 	uint8_t		*res;
 	int			i;
@@ -39,7 +39,7 @@ uint8_t		*append_free(uint8_t *message, uint64_t *mlen)
 	return (res);
 }
 
-void		compress(uint32_t *vars, size_t i, uint32_t *fg)
+void		compress_md5(uint32_t *vars, size_t i, uint32_t *fg)
 {
 	uint32_t	f;
 	uint32_t	g;
@@ -91,7 +91,7 @@ uint32_t	*md5(uint8_t *message, uint64_t mlen)
 	uint32_t	*digest;
 	uint64_t	j;
 
-	message = append_free(message, &mlen);
+	message = append_free_md5(message, &mlen);
 	digest = malloc(sizeof(vars));
 	ft_memcpy(digest, (uint32_t[]){0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476}, sizeof(vars));
 	j = 0;
@@ -101,7 +101,7 @@ uint32_t	*md5(uint8_t *message, uint64_t mlen)
 		i = 0;
 		while (i < 64)
 		{
-			compress(vars, i, fg);
+			compress_md5(vars, i, fg);
 			vars[0] = vars[1] + left_rotate(vars[0] + fg[0] + g_md5_k[i] + ((uint32_t *)(message + j))[fg[1]], g_md5_s[i]);
 			copy_round_md5(vars);
 			i++;

@@ -6,13 +6,13 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 20:10:04 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 12:25:12 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 13:21:27 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-uint8_t		*append_free(uint8_t *message, uint64_t *mlen)
+uint8_t		*append_free_sha(uint8_t *message, uint64_t *mlen)
 {
 	uint8_t		*res;
 	int			i;
@@ -59,7 +59,7 @@ uint32_t	*sha256(uint8_t *message, uint64_t mlen)
 	uint64_t	j;
 	int			i;
 	
-	message = append_free(message, &mlen);
+	message = append_free_sha(message, &mlen);
 	digest = malloc(sizeof(uint32_t) * 8);
 	ft_memcpy(digest, (uint32_t[]){0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19}, sizeof(digest));
 	j = 0;

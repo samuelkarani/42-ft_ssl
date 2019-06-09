@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 22:08:07 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 12:34:39 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 13:44:35 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*read_file(char *fpath, char *algo)
 	int		fd;
 
 	res = NULL;
-	if ((fd = open(fpath, O_RDONLY)))
+	if ((fd = open(fpath, O_RDONLY)) > 0)
 	{
 		while (get_next_line(fd, &line))
 			res = join_and_free(res, line);
@@ -55,26 +55,23 @@ int	usage(void)
 int	invalid_command(char *cmd)
 {
 	ft_printf("ft_ssl: Error: '%s' is an invalid command.\n"
-		"Message Digest commands:\nmd5\nsha256", cmd);
+		"Message Digest commands:\nmd5\nsha256\n", cmd);
 	return (0);
 }
 
-int	illegal_option(char *algo, char *option)
+void	illegal_option(char *algo, char *option)
 {
 	ft_printf("%s: illegal option -- %s\n", algo, option);
 	usage();
-	return (1);
 }
 
-int	no_such_file(char *fpath, char *algo)
+void	no_such_file(char *fpath, char *algo)
 {
-	ft_printf("ft_ssl: %s: %s: No such file or directory", algo, fpath);
-	return (1);
+	ft_printf("ft_ssl: %s: %s: No such file or directory\n", algo, fpath);
 }
 
-int	s_flag_error(char *algo)
+void	s_flag_error(char *algo)
 {
 	ft_printf("%s: option requires an argument -- s", algo);
 	ft_printf("usage: %s [-pqr] [-s string] [files ...]", algo);
-	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:03:58 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 12:27:41 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 13:26:33 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,18 +68,18 @@ uint32_t	*sha256(uint8_t *message, uint64_t mlen);
 char		*read_file(char *fpath, char *algo);
 char		*read_stdin(void);
 int			usage(void);
-int			illegal_option(char *algo, char *option);
-int			no_such_file(char *fpath, char *algo);
+void		illegal_option(char *algo, char *option);
+void		no_such_file(char *fpath, char *algo);
 int			invalid_command(char *cmd);
 int			valid_command(char *s);
-int			s_flag_error(char *algo);
+void		s_flag_error(char *algo);
 
 uint64_t	*swap(uint64_t *values, size_t n);
 uint64_t	ft_strlen_llu(uint8_t *s);
 uint32_t 	left_rotate(uint32_t n, uint32_t s);
 uint32_t	right_rotate(uint32_t n, uint32_t s);
 void		update(uint32_t *dst, uint32_t *src, size_t n);
-void		join_print(uint8_t *vars);
+void		join_print(uint8_t *vars, int newline);
 
 void		print_binary(uint8_t *message, size_t mlen);
 void		print_hex(uint32_t *arr, size_t n);

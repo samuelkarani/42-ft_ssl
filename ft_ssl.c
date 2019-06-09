@@ -6,44 +6,51 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 19:22:52 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 12:55:42 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 13:51:47 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-void	print_digest(uint32_t *digest, t_ssl arg, char *msg, int *flags)
+void	print_digest(uint32_t *digest, t_ssl arg, int *flags)
 {
 	if (arg.type == 0)
 	{
-		if (flags[0] && !flags[1])
-			ft_putendl(msg);
-		join_print((uint8_t *)digest);
+		if (flags[0])
+		{
+			ft_putendl(arg.name);
+			free(arg.name);
+		}
+		join_print((uint8_t *)digest, 1);
 	}
 	if (arg.type == 1)
 	{
 		if (flags[2])
 		{
-			join_print((uint8_t *)digest);
-			ft_printf(" %s", arg.name);
+			join_print((uint8_t *)digest, flags[1] ? 1 : 0);
+			if (!flags[1])
+				ft_printf(" %s\n", arg.name);
 		}
 		else
 		{
-			ft_printf("MD5 (%s) = ", arg.name);
-			join_print((uint8_t *)digest);
+			if (!flags[1])
+				ft_printf("MD5 (%s) = ", arg.name);
+			join_print((uint8_t *)digest, 1);
 		}
 	}
 	if (arg.type == 2)
 	{
 		if (flags[2])
 		{
-			join_print((uint8_t *)digest);
-			ft_printf(" %s", arg.name);
+			join_print((uint8_t *)digest, flags[1] ? 1 : 0);
+			if (!flags[1])
+				ft_printf(" %s\n", arg.name);
 		}
 		else
 		{
-			ft_printf("MD5 (\"%s\") = ", arg.name);
-			join_print((uint8_t *)digest);
+			if (!flags[1])
+				ft_printf("MD5 (\"%s\") = ", arg.name);
+			join_print((uint8_t *)digest, 1);
 		}
 	}
 }
@@ -60,6 +67,7 @@ void	process(t_ssl arg, uint32_t	*(*algorithm)(uint8_t *, uint64_t),
 	if (arg.type == 0)
 	{
 		msg = read_stdin();
+		arg.name = ft_strdup(msg);
 	}
 	if (arg.type == 1)
 	{
@@ -78,8 +86,8 @@ void	process(t_ssl arg, uint32_t	*(*algorithm)(uint8_t *, uint64_t),
 	if (msg)
 	{
 		digest = (*algorithm)((uint8_t *)msg, ft_strlen_llu((uint8_t *)msg));
-		print_digest(digest, arg, msg, flags);
-		free(msg);
+		print_digest(digest, arg, flags);
+		// free(msg);
 		free(digest);
 	}
 }
@@ -95,7 +103,7 @@ void	dispatcher(char *algo, t_ssl *args, int no, int *flags)
 		process(args[i++], algorithm, flags, algo);
 }
 
-int		parse(char **av, char *algo, int *flags, t_ssl *args)
+int		parse(char **av, int *flags, t_ssl *args)
 {
 	t_ssl	arg;
 	int		i;
@@ -120,20 +128,21 @@ int		parse(char **av, char *algo, int *flags, t_ssl *args)
 				flags[2] = 1;
 			else if (ft_strequ(av[i], "-s"))
 			{
-				arg = (t_ssl){av[i], 2, 0};
+				flags[3] = 1;
+				arg = (t_ssl){NULL, 2, 0};
 				if (av[++i])
-					flags[3] = 1;
+					arg.name = av[i];
 				else
 					arg.error = 1;
 				args[idx++] = arg;
 			}
 			else
 			{
+				done = 1;
 				if (av[i][0] == '-' && av[i][1])
 					args[idx++] = (t_ssl){av[i], -1, 1};
 				else
 					args[idx++] = (t_ssl){av[i], 1, 0};
-				done = 1;
 			}
 		}
 		else
@@ -158,12 +167,12 @@ int		main(int ac, char **av)
 		if (valid_command(av[1]))
 		{
 			algo = av[1];
-			if ((idx = parse(av, av[1], flags, args)))
+			if ((idx = parse(av, flags, args)))
 				dispatcher(algo, args, idx, flags);
 		}
 		else
-			invalid_command(av[1]);
+			return (invalid_command(av[1]));
 	}
 	else
-		usage();
+		return (usage());
 }
