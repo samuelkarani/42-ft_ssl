@@ -3,7 +3,8 @@
 uint8_t	*append(uint8_t *message, uint64_t *mlen)
 {
 	uint8_t		*res;
-	uint32_t	i, x, n;
+	int			i, x;
+	uint64_t	n;
 
 	*mlen += 2;
 	x = *mlen % 64;
@@ -19,7 +20,7 @@ uint8_t	*append(uint8_t *message, uint64_t *mlen)
 	res[*mlen - 1] = (u_int8_t)128;
 	ft_memset(res + *mlen, 0, i);
 	n = (*mlen - 1) * 8;
-	ft_memcpy(res + *mlen + i, &n, 4); // ??
+	ft_memcpy(res + *mlen + i, &n, 8);
 	*mlen = *mlen + i + 8;
 	return res;
 }
@@ -50,11 +51,6 @@ void	compress(uint32_t *vars, size_t i, uint32_t *fg)
 	}
 	fg[0] = f;
 	fg[1] = g;
-}
-
-void	assign(uint32_t *dst, uint32_t *src, size_t n)
-{
-	ft_memcpy(dst, src, n);
 }
 
 uint32_t chunk(uint32_t *message, size_t g)
@@ -95,32 +91,31 @@ void	copy_round(uint32_t *vars)
 
 void	md5(uint8_t *message, uint64_t mlen)
 {
-	uint32_t cnts[4], vars[4], fg[2], i;
+	uint32_t	cnts[4], vars[4], fg[2], i;
 	uint64_t	j;
 
 	message = append(message, &mlen);
-	// print_binary_char(message, mlen); ft_putchar('\n');
-	assign(cnts, (uint32_t[]){0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476}, sizeof(cnts));
+	ft_memcpy(cnts, (uint32_t[]){0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476},
+		sizeof(cnts));
 	j = 0;
 	while (j < mlen)
 	{
-		assign(vars, cnts, sizeof(vars));
+		ft_memcpy(vars, cnts, sizeof(vars));
 		i = 0;
 		while (i < 64)
 		{
 			compress(vars, i, fg);
 			vars[0] = vars[1]
 				+ left_rotate(
-					vars[0] + fg[0] + g_k[i] + chunk((uint32_t *)message + j, fg[1]),
+					vars[0] + fg[0] + g_k[i] + chunk((uint32_t *)(message + j), fg[1]),
 					g_s[i]);
 			copy_round(vars);
-			print_hex_ints(vars, 4); print_binary_ints(vars, 4); ft_printf("\n");
 			i++;
 		}
 		update(cnts, vars);
 		j += 64;
 	}
-	join_print(cnts);
+	join_print((uint8_t *)cnts);
 	free(message);
 }
 

@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:03:58 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/08 16:19:26 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/08 18:38:33 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,9 @@ static uint32_t g_k[] = {
 };
 
 uint64_t	ft_strlen_llu(uint8_t *s);
-void		join_print(uint32_t *vars);
+void		join_print(uint8_t *vars);
 
-void		print_binary_char(unsigned char *message, size_t mlen);
-void		print_binary_ints(uint32_t *arr, size_t len);
-void		print_hex_ints(uint32_t *arr, size_t n);
-void		print_binary_char(uint8_t *message, size_t mlen);
+void		print_binary(uint8_t *message, size_t mlen);
+void		print_hex(uint32_t *arr, size_t n);
 
 #endif
