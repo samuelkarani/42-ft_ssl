@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 NAME = ft_ssl
 
-SRC = md5.c utils.c
+SRC = md5.c utils.c debug.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -31,7 +31,7 @@ fclean: clean
 	@rm -f $(NAME)
 
 norm:
-	norminette $(SRC) ft_ls.h
+	norminette $(SRC) $(NAME).h
 
 norm-all: norm
 	norminette libft/{*.c,*.h} libft/ft_printf/{*.c,*.h} libft/get_next_line/{*.c,*.h}
