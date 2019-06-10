@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:43:45 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 13:32:45 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 17:42:24 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,35 +44,44 @@ void		update(uint32_t *dst, uint32_t *src, size_t n)
 	}
 }
 
-void		join_print(uint8_t *vars, int newline)
+void		join_print(uint8_t *digest, char *algo, int newline)
 {
 	int	i;
 
 	i = 0;
-	while (i < 16)
-		ft_printf("%02x", vars[i++]);
+	if (ft_strequ(algo, "MD5"))
+	{
+		while (i < 16)
+			ft_printf("%02x", digest[i++]);
+	}
+	else
+	{
+		swap_arr32((uint32_t *)digest, 64);
+		while (i < 32)
+			ft_printf("%02x", digest[i++]);
+	}
 	if (newline)
 		ft_putchar('\n');
 }
 
-uint64_t		swap_int64(const uint64_t val)
+uint32_t	swap_int32(const uint32_t value)
 {
-	return ((((val) & 0xff00000000000000ull) >> 56) |
-			(((val) & 0x00ff000000000000ull) >> 40) |
-			(((val) & 0x0000ff0000000000ull) >> 24) |
-			(((val) & 0x000000ff00000000ull) >> 8) |
-			(((val) & 0x00000000ff000000ull) << 8) |
-			(((val) & 0x0000000000ff0000ull) << 24) |
-			(((val) & 0x000000000000ff00ull) << 40) |
-			(((val) & 0x00000000000000ffull) << 56));
+	uint32_t result;
+
+	result = 0;
+	result |= (value & 0x000000FF) << 24;
+	result |= (value & 0x0000FF00) << 8;
+	result |= (value & 0x00FF0000) >> 8;
+	result |= (value & 0xFF000000) >> 24;
+	return (result);
 }
 
-uint64_t	*swap(uint64_t *values, size_t n)
+uint32_t	*swap_arr32(uint32_t *values, size_t bytes)
 {
 	size_t i;
 
 	i = 0;
-	while (i < n / sizeof(uint64_t))
-		swap_int64(values[i++]);
+	while (i < bytes / sizeof(uint32_t))
+		swap_int32(values[i++]);
 	return (values);
 }

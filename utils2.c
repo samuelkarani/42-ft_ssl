@@ -6,11 +6,25 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 22:08:07 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 14:59:53 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 15:21:38 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
+
+char	*ft_strupper(char *s)
+{
+	char	*res;
+
+	res = s;
+	while (*s)
+	{
+		if (ft_islower(*s))
+			*s -= 32;
+		s++;
+	}
+	return (res);
+}
 
 char	*read_lines(int fd)
 {

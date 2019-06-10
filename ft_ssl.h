@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:03:58 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 13:26:33 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 17:42:24 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,15 @@ int			invalid_command(char *cmd);
 int			valid_command(char *s);
 void		s_flag_error(char *algo);
 
-uint64_t	*swap(uint64_t *values, size_t n);
+uint32_t	*swap_arr32(uint32_t *values, size_t bytes);
+uint32_t	swap_int32(const uint32_t value);
+uint64_t	*swap(uint64_t *values, size_t bytes);
 uint64_t	ft_strlen_llu(uint8_t *s);
 uint32_t 	left_rotate(uint32_t n, uint32_t s);
 uint32_t	right_rotate(uint32_t n, uint32_t s);
 void		update(uint32_t *dst, uint32_t *src, size_t n);
-void		join_print(uint8_t *vars, int newline);
+void		join_print(uint8_t *vars, char *algo, int newline);
+char		*ft_strupper(char *s);
 
 void		print_binary(uint8_t *message, size_t mlen);
 void		print_hex(uint32_t *arr, size_t n);

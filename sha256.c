@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 20:10:04 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 13:21:27 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 17:43:30 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,12 @@ uint8_t		*append_free_sha(uint8_t *message, uint64_t *mlen)
 	res = malloc(*mlen + i + 8);
 	ft_memcpy(res, message, *mlen - 1);
 	res[*mlen - 1] = 128;
-	ft_memset(res + *mlen, 0, i - 1);
+	ft_memset(res + *mlen, 0, i);
 	n = (*mlen - 1) * 8;
 	ft_memcpy(res + *mlen + i, &n, 8);
 	*mlen = *mlen + i + 8;
 	free(message);
+	// swap_arr32((uint32_t *)res, *mlen);
 	return (res);
 }
 
@@ -60,8 +61,11 @@ uint32_t	*sha256(uint8_t *message, uint64_t mlen)
 	int			i;
 	
 	message = append_free_sha(message, &mlen);
+	print_binary(message, mlen);
 	digest = malloc(sizeof(uint32_t) * 8);
-	ft_memcpy(digest, (uint32_t[]){0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19}, sizeof(digest));
+	ft_memcpy(digest, (uint32_t[]){0x6a09e667, 0xbb67ae85, 0x3c6ef372,
+		0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19},
+		8 * sizeof(uint32_t));
 	j = 0;
 	while (j < mlen)
 	{
@@ -70,8 +74,8 @@ uint32_t	*sha256(uint8_t *message, uint64_t mlen)
 		i = 16;
 		while (i < 64)
 		{
-			tmps[0] = right_rotate(w[i - 15], 7) ^ right_rotate(w[i - 15], 18) ^ w[i - 15];
-			tmps[1] = right_rotate(w[i - 2], 17) ^ right_rotate(w[i - 2], 19) ^ w[i - 2];
+			tmps[0] = right_rotate(w[i - 15], 7) ^ right_rotate(w[i - 15], 18) ^ (w[i - 15] >> 3);
+			tmps[1] = right_rotate(w[i - 2], 17) ^ right_rotate(w[i - 2], 19) ^ (w[i - 2] >> 10);
 			w[i] = w[i - 16] + tmps[0] + w[i - 7] + tmps[1];
 			i++;
 		}
@@ -93,5 +97,5 @@ uint32_t	*sha256(uint8_t *message, uint64_t mlen)
 		j += 64;
 	}
 	free(message);
-	return ((uint32_t *)swap((uint64_t *)digest, sizeof(uint32_t) * 8));
+	return ((uint32_t *)digest);
 }

@@ -6,13 +6,13 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 19:22:52 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 15:09:25 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/09 15:25:39 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-void	print_digest(uint32_t *digest, t_ssl arg, int *flags)
+void	print_digest(uint32_t *digest, t_ssl arg, int *flags, char *algo)
 {
 	if (arg.type == 0)
 	{
@@ -21,36 +21,36 @@ void	print_digest(uint32_t *digest, t_ssl arg, int *flags)
 			ft_putstr(arg.name);
 			free(arg.name);
 		}
-		join_print((uint8_t *)digest, 1);
+		join_print((uint8_t *)digest, algo, 1);
 	}
 	if (arg.type == 1)
 	{
 		if (flags[2])
 		{
-			join_print((uint8_t *)digest, flags[1] ? 1 : 0);
+			join_print((uint8_t *)digest, algo, flags[1] ? 1 : 0);
 			if (!flags[1])
 				ft_printf(" %s\n", arg.name);
 		}
 		else
 		{
 			if (!flags[1])
-				ft_printf("MD5 (%s) = ", arg.name);
-			join_print((uint8_t *)digest, 1);
+				ft_printf("%s (%s) = ", ft_strupper(algo), arg.name);
+			join_print((uint8_t *)digest, algo, 1);
 		}
 	}
 	if (arg.type == 2)
 	{
 		if (flags[2])
 		{
-			join_print((uint8_t *)digest, flags[1] ? 1 : 0);
+			join_print((uint8_t *)digest, algo, flags[1] ? 1 : 0);
 			if (!flags[1])
 				ft_printf(" \"%s\"\n", arg.name);
 		}
 		else
 		{
 			if (!flags[1])
-				ft_printf("MD5 (\"%s\") = ", arg.name);
-			join_print((uint8_t *)digest, 1);
+				ft_printf("%s (\"%s\") = ", ft_strupper(algo), arg.name);
+			join_print((uint8_t *)digest, algo, 1);
 		}
 	}
 }
@@ -86,7 +86,7 @@ void	process(t_ssl arg, uint32_t	*(*algorithm)(uint8_t *, uint64_t),
 	if (msg)
 	{
 		digest = (*algorithm)((uint8_t *)msg, ft_strlen_llu((uint8_t *)msg));
-		print_digest(digest, arg, flags);
+		print_digest(digest, arg, flags, algo);
 		// free(msg);
 		free(digest);
 	}
