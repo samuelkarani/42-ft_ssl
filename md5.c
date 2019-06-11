@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 19:16:05 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 14:58:32 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/10 20:13:21 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ uint32_t	*md5(uint8_t *message, uint64_t mlen)
 	uint64_t	j;
 
 	message = append_free_md5(message, &mlen);
-	// print_binary(message, mlen);
 	digest = malloc(sizeof(vars));
 	ft_memcpy(digest, (uint32_t[]){0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476}, sizeof(vars));
 	j = 0;

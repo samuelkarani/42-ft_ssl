@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 22:08:07 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 15:21:38 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/10 20:21:01 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,26 +28,22 @@ char	*ft_strupper(char *s)
 
 char	*read_lines(int fd)
 {
-	char	*res;
-	char	*line;
 	int		n;
+	char	*buf;
+	char	*res;
+	char	*tmp;
 
 	res = NULL;
-	while ((n = get_next_line(fd, &line)) > 0)
+	n = 65535;
+	buf = malloc(n * sizeof(char));
+	while ((n = read(fd, buf, n)) > 0)
 	{
-		if (n == 1)
-		{
-			if (res)
-			{
-				res = join_and_free(res, ft_strdup("\n"));
-				res = join_and_free(res, line);
-			}
-			else
-				res = join_and_free(line, ft_strdup("\n"));
-		}
-		else
-			res = join_and_free(res, line);
+		buf[n] = 0;
+		tmp = res;
+		res = ft_strjoin(res, buf);
+		free(tmp);
 	}
+	free(buf);
 	return (res);
 }
 

@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:43:45 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 17:42:24 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/10 20:16:07 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,19 +46,21 @@ void		update(uint32_t *dst, uint32_t *src, size_t n)
 
 void		join_print(uint8_t *digest, char *algo, int newline)
 {
+	uint32_t	*sha256;
 	int	i;
 
 	i = 0;
-	if (ft_strequ(algo, "MD5"))
+	if (ft_strequ(algo, "MD5") || ft_strequ(algo, "md5"))
 	{
+		
 		while (i < 16)
 			ft_printf("%02x", digest[i++]);
 	}
 	else
 	{
-		swap_arr32((uint32_t *)digest, 64);
-		while (i < 32)
-			ft_printf("%02x", digest[i++]);
+		sha256 = (uint32_t *)digest;
+		while (i < 8)
+			ft_printf("%.8x", sha256[i++]);
 	}
 	if (newline)
 		ft_putchar('\n');
@@ -78,10 +80,15 @@ uint32_t	swap_int32(const uint32_t value)
 
 uint32_t	*swap_arr32(uint32_t *values, size_t bytes)
 {
-	size_t i;
+	size_t	i;
+	size_t	n;
 
 	i = 0;
-	while (i < bytes / sizeof(uint32_t))
-		swap_int32(values[i++]);
+	n = bytes / sizeof(uint32_t);
+	while (i < n)
+	{
+		values[i] = swap_int32(values[i]);
+		i++;
+	}
 	return (values);
 }

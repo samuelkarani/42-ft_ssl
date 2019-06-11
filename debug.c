@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 18:36:31 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/08 18:44:07 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/10 19:10:23 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	print_byte(uint8_t o)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (i < 8)
@@ -47,7 +47,7 @@ void	print_hex(uint32_t *arr, size_t n)
 	i = 0;
 	while (i < n)
 	{
-		ft_printf("%#08x", arr[i++]);
+		ft_printf("%.8x", arr[i++]);
 		ft_putchar(' ');
 	}
 	ft_putchar('\n');
