@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:03:58 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/09 17:42:24 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/06/10 22:03:11 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ static uint32_t g_md5_s[] = {
 	4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
 	6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21
 };
+
+static	uint32_t g_init_md5[] = {
+	0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476 };
 
 static uint32_t g_md5_k[] = {
 	0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
@@ -44,47 +47,59 @@ static uint32_t g_md5_k[] = {
 	0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
 
+static uint32_t g_init_sha256[] = {
+	0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+	0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19 };
+
 static uint32_t g_sha256_k[] = {
-   0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
-   0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-   0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-   0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-   0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
-   0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-   0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-   0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+	0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1,
+	0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
+	0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786,
+	0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+	0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147,
+	0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
+	0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
+	0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+	0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a,
+	0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-typedef struct s_ssl
+typedef struct	s_ssl
 {
-	char 		*name;
-	int 		type;
+	char		*name;
+	int			type;
 	int			error;
 }				t_ssl;
 
-uint32_t	*md5(uint8_t *message, uint64_t mlen);
-uint32_t	*sha256(uint8_t *message, uint64_t mlen);
+uint32_t		*md5(uint8_t *message, uint64_t mlen);
+uint32_t		*sha256(uint8_t *message, uint64_t mlen);
 
-char		*read_file(char *fpath, char *algo);
-char		*read_stdin(void);
-int			usage(void);
-void		illegal_option(char *algo, char *option);
-void		no_such_file(char *fpath, char *algo);
-int			invalid_command(char *cmd);
-int			valid_command(char *s);
-void		s_flag_error(char *algo);
+int				parse(char **av, int *flags, t_ssl *args);
+void			print_digest(uint32_t *digest, t_ssl arg, int *flags,
+					char *algo);
 
-uint32_t	*swap_arr32(uint32_t *values, size_t bytes);
-uint32_t	swap_int32(const uint32_t value);
-uint64_t	*swap(uint64_t *values, size_t bytes);
-uint64_t	ft_strlen_llu(uint8_t *s);
-uint32_t 	left_rotate(uint32_t n, uint32_t s);
-uint32_t	right_rotate(uint32_t n, uint32_t s);
-void		update(uint32_t *dst, uint32_t *src, size_t n);
-void		join_print(uint8_t *vars, char *algo, int newline);
-char		*ft_strupper(char *s);
+char			*read_file(char *fpath, char *algo);
+char			*read_stdin(void);
+int				usage(void);
+void			illegal_option(char *algo, char *option);
+void			*no_file(char *fpath, char *algo);
+int				invalid_command(char *cmd);
+int				valid_command(char *s);
+void			*s_flag_error(char *algo);
 
-void		print_binary(uint8_t *message, size_t mlen);
-void		print_hex(uint32_t *arr, size_t n);
+uint64_t		get_bytes(uint64_t n);
+uint32_t		*swap_arr32(uint32_t *values, size_t bytes);
+uint32_t		swap_int32(const uint32_t value);
+uint64_t		*swap(uint64_t *values, size_t bytes);
+uint64_t		ft_strlen_llu(uint8_t *s);
+uint32_t		lr(uint32_t n, uint32_t s);
+uint32_t		rr(uint32_t n, uint32_t s);
+void			update(uint32_t *dst, uint32_t *src, size_t n);
+void			join_print(uint8_t *vars, char *algo, int newline);
+char			*ft_strupper(char *s);
+
+void			print_binary(uint8_t *message, size_t mlen);
+void			print_hex(uint32_t *arr, size_t n);
 
 #endif
