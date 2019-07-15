@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/06 16:03:58 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/10 22:03:11 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/07/14 21:00:57 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,41 +65,42 @@ static uint32_t g_sha256_k[] = {
 	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-typedef struct	s_ssl
+typedef struct		s_ssl
 {
 	char		*name;
 	int			type;
 	int			error;
-}				t_ssl;
+}					t_ssl;
 
-uint32_t		*md5(uint8_t *message, uint64_t mlen);
-uint32_t		*sha256(uint8_t *message, uint64_t mlen);
+typedef uint32_t *algo_f(uint8_t *msg, uint64_t mlen);
+uint32_t			*md5(uint8_t *message, uint64_t mlen);
+uint32_t			*sha256(uint8_t *message, uint64_t mlen);
 
-int				parse(char **av, int *flags, t_ssl *args);
-void			print_digest(uint32_t *digest, t_ssl arg, int *flags,
-					char *algo);
+int					parse(char **av, int *flags, t_ssl *args);
+void				print_digest(uint32_t *digest, t_ssl arg, int *flags,
+						char *algo);
 
-char			*read_file(char *fpath, char *algo);
-char			*read_stdin(void);
-int				usage(void);
-void			illegal_option(char *algo, char *option);
-void			*no_file(char *fpath, char *algo);
-int				invalid_command(char *cmd);
-int				valid_command(char *s);
-void			*s_flag_error(char *algo);
+char				*read_file(char *fpath, char *algo);
+char				*read_stdin(void);
+int					usage(void);
+void				illegal_option(char *algo, char *option);
+void				*no_file(char *fpath, char *algo);
+int					invalid_command(char *cmd);
+int					valid_command(char *s);
+void				*s_flag_error(char *algo);
 
-uint64_t		get_bytes(uint64_t n);
-uint32_t		*swap_arr32(uint32_t *values, size_t bytes);
-uint32_t		swap_int32(const uint32_t value);
-uint64_t		*swap(uint64_t *values, size_t bytes);
-uint64_t		ft_strlen_llu(uint8_t *s);
-uint32_t		lr(uint32_t n, uint32_t s);
-uint32_t		rr(uint32_t n, uint32_t s);
-void			update(uint32_t *dst, uint32_t *src, size_t n);
-void			join_print(uint8_t *vars, char *algo, int newline);
-char			*ft_strupper(char *s);
+uint64_t			get_bytes(uint64_t n);
+uint32_t			*swap_arr32(uint32_t *values, size_t bytes);
+uint32_t			swap_int32(const uint32_t value);
+uint64_t			*swap(uint64_t *values, size_t bytes);
+uint64_t			ft_strlen_llu(uint8_t *s);
+uint32_t			lr(uint32_t n, uint32_t s);
+uint32_t			rr(uint32_t n, uint32_t s);
+void				update(uint32_t *dst, uint32_t *src, size_t n);
+void				join_print(uint8_t *vars, char *algo, int newline);
+char				*ft_strupper(char *s);
 
-void			print_binary(uint8_t *message, size_t mlen);
-void			print_hex(uint32_t *arr, size_t n);
+void				print_binary(uint8_t *message, size_t mlen);
+void				print_hex(uint32_t *arr, size_t n);
 
 #endif

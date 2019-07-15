@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 22:08:07 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/10 22:05:01 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/07/14 18:11:41 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ char	*read_lines(int fd)
 		res = ft_strjoin(res, buf);
 		free(tmp);
 	}
+	if (!res && n == 0)
+		res = ft_strdup("");
 	free(buf);
 	return (res);
 }

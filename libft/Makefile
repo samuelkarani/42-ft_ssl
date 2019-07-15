@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -c -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 NAME = libft.a
 SRCS = ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c \
 ft_isdigit.c ft_isprint.c ft_itoa.c ft_memalloc.c ft_memccpy.c ft_memchr.c \
@@ -16,8 +16,9 @@ ft_strrev.c ft_strrevnew.c ft_strslice.c ft_itoa_base.c ft_putnbr_base.c ft_abs.
 ft_strnewpad.c ft_stridx.c
 OBJECTS = $(SRCS:.c=.o)
 all: $(NAME)
-$(NAME):
-	$(CC) $(CFLAGS) $(SRCS)
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+$(NAME): $(OBJECTS)
 	ar rc $(NAME) $(OBJECTS)
 	ranlib $(NAME)
 clean:

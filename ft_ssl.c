@@ -6,7 +6,7 @@
 /*   By: smbaabu <smbaabu@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 19:22:52 by smbaabu           #+#    #+#             */
-/*   Updated: 2019/06/10 21:01:25 by smbaabu          ###   ########.fr       */
+/*   Updated: 2019/07/14 21:00:14 by smbaabu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,16 @@ void	process(t_ssl arg, uint32_t *(*algorithm)(uint8_t *, uint64_t),
 
 void	dispatcher(char *algo, t_ssl *args, int no, int *flags)
 {
-	uint32_t	*(*algorithm)(uint8_t *, uint64_t);
+	algo_f		*dispatch[2];
 	int			i;
+	int			idx;
 
-	algorithm = ft_strequ("md5", algo) ? &md5 : &sha256;
+	dispatch[0] = &md5;
+	dispatch[1] = &sha256;
+	idx = !ft_strequ("md5", algo);
 	i = 0;
 	while (i < no)
-		process(args[i++], algorithm, flags, algo);
+		process(args[i++], dispatch[idx], flags, algo);
 }
 
 int		main(int ac, char **av)

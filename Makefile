@@ -4,17 +4,20 @@ CFLAGS = -Wall -Wextra -Werror
 
 NAME = ft_ssl
 
-SRC = ft_ssl.c md5.c sha256.c parse.c print.c utils*.c debug.c
+SRC = ft_ssl.c md5.c sha256.c parse.c print.c utils.c utils2.c utils3.c utils4.c debug.c
 
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME):
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(NAME): $(OBJ)
 	@make -C libft
 	@make -C libft/ft_printf
 	@make -C libft/get_next_line
-	@$(CC) $(CFLAGS) $(SRC) -Llibft -lft \
+	@$(CC) $(CFLAGS) $(OBJ) -Llibft -lft \
 		-Llibft/ft_printf -lftprintf \
 		-Llibft/get_next_line -lftget_next_line -o $@
 
@@ -24,10 +27,11 @@ clean:
 	@make clean -C libft/get_next_line
 	@rm -f $(OBJ)
 
-fclean: clean
+fclean:
 	@make fclean -C libft
 	@make fclean -C libft/ft_printf
 	@make fclean -C libft/get_next_line
+	@rm -f $(OBJ)
 	@rm -f $(NAME)
 
 norm:
